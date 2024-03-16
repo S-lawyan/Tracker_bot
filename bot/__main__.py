@@ -1,3 +1,5 @@
+import asyncio
+
 from services import dp
 from loguru import logger
 from aiogram import executor
@@ -16,9 +18,8 @@ async def set_default_settings_bot(dp):
 
 
 async def on_startup(dp):
-    logger.warning("Starting bot...")
     logger.add(
-        "bot/logs/avia_bot_{time:YYYY-MM-DD}.log",
+        "logs/avia_bot_{time:YYYY-MM-DD}.log",
         rotation="1 day",
         retention="7 days",
         compression="zip",
@@ -32,8 +33,14 @@ async def on_shutdown(dp):
     logger.warning("The bot is stop!")
 
 
+async def start_scheduler():
+    logger.warning("Планировщик запущен!")
+
+
 def main():
-    executor.start_polling(dp, on_startup=on_startup, on_shutdown=on_shutdown, skip_updates=True)
+    loop = asyncio.get_event_loop()
+    loop.create_task(start_scheduler())
+    executor.start_polling(dp, loop=loop, on_startup=on_startup, on_shutdown=on_shutdown, skip_updates=True)
 
 
 if __name__ == "__main__":

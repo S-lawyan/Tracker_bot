@@ -1,6 +1,7 @@
 import sqlite3 as sq
 from bot.config import Settings
 from loguru import logger
+from bot.config import config
 
 
 class SQLiteBase:
@@ -17,3 +18,4 @@ class SQLiteBase:
         """Создание схемы БД"""
         with self.connect as connect:
             pass
+

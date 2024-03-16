@@ -7,6 +7,7 @@ from pydantic import BaseModel, SecretStr
 class BotConfig(BaseModel):
     bot_token: SecretStr
     per_page: int
+    admins: list
 
 
 class SQLiteConfig(BaseModel):
@@ -22,7 +23,8 @@ def load_config(config_path: str) -> Settings:
     load_dotenv(dotenv_path=config_path)
     bot_configs: BotConfig = BotConfig(
         bot_token=SecretStr(os.getenv("BOT_TOKEN", None)),
-        per_page=os.getenv("PER_PAGE", None)
+        per_page=os.getenv("PER_PAGE", None),
+        admins=os.getenv("ADMINS", []).split(",")
     )
     db_configs: SQLiteConfig = SQLiteConfig(
         db_filename=os.getenv("DB_FILENAME", None)
