@@ -1,179 +1,47 @@
 {
   "state": 0,
-  "params": {
-    "version": 2,
-    "curr": "rub",
-    "spp": 29,
-    "dest": -1180979,
-    "payloadVersion": 1
-  },
+  "payloadVersion": 2,
   "data": {
     "products": [
       {
-        "id": 163405593,
-        "root": 149888440,
-        "kindId": 2,
-        "brand": "KetraruM",
-        "brandId": 1337043,
-        "siteBrandId": 1347043,
+        "id": 183898830,
+        "root": 167354024,
+        "kindId": 0,
+        "brand": "Apple",
+        "brandId": 6049,
+        "siteBrandId": 16049,
         "colors": [
           {
-            "name": "серый",
-            "id": 8421504
+            "name": "фиолетовый",
+            "id": 15631086
           }
         ],
-        "subjectId": 5204,
-        "subjectParentId": 1513,
-        "name": "Спортивные брюки палаццо для активного отдыха",
-        "supplier": "BAZAROFF SHOP",
-        "supplierId": 1275062,
-        "supplierRating": 4.7,
+        "subjectId": 515,
+        "subjectParentId": 6258,
+        "name": "iPhone 14 128GB",
+        "supplier": "WB Retail",
+        "supplierId": 1312586,
+        "supplierRating": 4.9,
         "supplierFlags": 0,
-        "priceU": 333000,
-        "salePriceU": 63900,
-        "logisticsCost": 0,
-        "sale": 80,
-        "returnCost": 0,
-        "diffPrice": false,
-        "saleConditions": 0,
-        "pics": 7,
+        "pics": 5,
         "rating": 5,
-        "reviewRating": 4.6,
-        "feedbacks": 12967,
-        "volume": 45,
-        "viewFlags": 16,
+        "reviewRating": 4.9,
+        "feedbacks": 342,
+        "volume": 5,
+        "viewFlags": 8,
         "promotions": [
           63484,
-          71630,
-          88395,
-          96213,
-          118400,
-          118644,
-          129562,
-          139030,
-          153695,
-          157671,
-          163018,
-          172994,
-          175386,
-          178415
+          171405
         ],
         "sizes": [
           {
-            "name": "40",
-            "origName": "40",
-            "rank": 262276,
-            "optionId": 272357368,
-            "returnCost": 0,
-            "stocks": [
-              {
-                "wh": 507,
-                "dtype": 4,
-                "qty": 8,
-                "priority": 64778,
-                "time1": 4,
-                "time2": 36
-              },
-              {
-                "wh": 206348,
-                "dtype": 4,
-                "qty": 3,
-                "priority": 50284,
-                "time1": 1,
-                "time2": 56
-              },
-              {
-                "wh": 130744,
-                "dtype": 4,
-                "qty": 2,
-                "priority": 36331,
-                "time1": 3,
-                "time2": 74
-              }
-            ],
-            "time1": 4,
-            "time2": 36,
-            "wh": 507,
-            "dtype": 4,
-            "sign": "7xaEVZiELOYfXVB2bP3WXFYRgoo=",
-            "payload": "meXRZRlfvQn41zsQrywVKIXfe3oqreSWGQPVPdIBr5pUJoqT73DvEjJLKHO/WqkrVpnMUA"
-          },
-          {
-            "name": "42",
-            "origName": "42",
-            "rank": 289981,
-            "optionId": 272357369,
-            "returnCost": 0,
+            "name": "",
+            "origName": "0",
+            "rank": 0,
+            "optionId": 303046487,
             "stocks": []
-          },
-          {
-            "name": "44",
-            "origName": "44",
-            "rank": 318901,
-            "optionId": 272357370,
-            "returnCost": 0,
-            "stocks": []
-          },
-          {
-            "name": "46",
-            "origName": "46",
-            "rank": 348643,
-            "optionId": 272357371,
-            "returnCost": 0,
-            "stocks": []
-          },
-          {
-            "name": "48",
-            "origName": "48",
-            "rank": 372125,
-            "optionId": 272357372,
-            "returnCost": 0,
-            "stocks": []
-          },
-          {
-            "name": "50",
-            "origName": "50",
-            "rank": 395188,
-            "optionId": 272357373,
-            "returnCost": 0,
-            "stocks": [
-              {
-                "wh": 686,
-                "dtype": 4,
-                "qty": 1,
-                "priority": 18475,
-                "time1": 4,
-                "time2": 145
-              },
-              {
-                "wh": 120762,
-                "dtype": 4,
-                "qty": 1,
-                "priority": 58998,
-                "time1": 7,
-                "time2": 37
-              },
-              {
-                "wh": 206348,
-                "dtype": 4,
-                "qty": 57,
-                "priority": 50284,
-                "time1": 1,
-                "time2": 56
-              }
-            ],
-            "time1": 7,
-            "time2": 37,
-            "wh": 120762,
-            "dtype": 4,
-            "sign": "1PvzU5RhuiMqaypa0ui6p6+F8io=",
-            "payload": "meXRZRlfvQn91zsQ4kaf9EABj9jP7n05bz0LjYFC9zoGZ5J0mcWOlUrmcQjkHmQEPucMmQ"
           }
-        ],
-        "time1": 4,
-        "time2": 36,
-        "wh": 507,
-        "dtype": 4
+        ]
       }
     ]
   }

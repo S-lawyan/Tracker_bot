@@ -5,13 +5,13 @@ import re
 from aiohttp import ClientSession, ClientConnectionError
 from async_timeout import timeout
 from loguru import logger
-from api.exceptions import (
+from bot.utils.exceptions import (
     WildberriesAPIGetProductTimeout,
     WildberriesAPIClientConnectionError,
-    WildberriesAPIPreprocessArticleError,
     WildberriesAPIUncorrectedQuery,
+    WildberriesAPIProductNotFound,
 )
-from api.models import Product
+from bot.utils.models import Product
 
 
 class WildberriesAPI:
@@ -20,7 +20,6 @@ class WildberriesAPI:
 
     async def get_product(self, query: str):
         # Выделение артикула
-        # TODO учесть исключения этой функции в ответе пользователю
         article: int = await preprocess_query(query=query)
         # Выполнения запроса, получение товара
         try:
@@ -33,39 +32,27 @@ class WildberriesAPI:
             logger.error(f"Ошибка подключение HTTP-сессии:\n{exc}")
             raise WildberriesAPIClientConnectionError()
         json_response = json.loads(response)
-        if "????" in response:
-            logger.error(f"Если запросили несуществующий товар, артикула которого нет в магазине")
-            raise ...
-        elif json_response["какая-то дата"] == ["пустая"]:
-            logger.error(f"Если вернулась какая-то другая ошибка")
-            raise ...
-        return pars_product(response=json_response)
+        if not json_response["data"]["products"]:  # json_response["data"]["products"] == []
+            logger.error(f"Товар не найден:\n{query}")
+            raise WildberriesAPIProductNotFound()
+        return wb_pars_product(product=json_response["data"]["products"][0])
 
 
 async def preprocess_query(query: str) -> int:
-    try:
-        # Проверка query на соответствие артикулу
-        if re.match(r'^\d+$', query):
-            return int(query)
-        # Проверка query на соответствие ссылки с артикулом
-        elif re.match(r'^https?://www\.wildberries\.ru/catalog/\d+', query):
-            match = re.search(r'\d+', query)  # Извлекаем артикул из ссылки
-            if match:
-                return int(match.group())
-        else:
-            logger.error(f"Некорректный запрос товара:\n{query}")
-            raise WildberriesAPIUncorrectedQuery()
-            # TODO сделать обработку этого исключения в ответе пользователю:
-            #  это не похоже на артикул или ссылку на товар
-    except Exception as exc:
-        logger.error(f"Ошибка предобработки артикула:\n{exc}")
-        raise WildberriesAPIPreprocessArticleError()
-        # TODO сделать обработку этого исключения в ответе пользователю:
-        #  Предложение попробовать снова
+    # Проверка query на соответствие артикулу
+    if re.match(r'^\d+$', query):
+        return int(query)
+    # Проверка query на соответствие ссылки с артикулом
+    elif re.match(r'^https?://www\.wildberries\.ru/catalog/\d+', query):
+        match = re.search(r'\d+', query)  # Извлекаем артикул из ссылки
+        if match:
+            return int(match.group())
+    else:
+        logger.error(f"Некорректный запрос товара:\n{query}")
+        raise WildberriesAPIUncorrectedQuery()
 
 
 async def get_product_response(session: ClientSession, article: int) -> str:
-    # request_url: str = "https://card.wb.ru/cards/v2/detail?appType=1&curr=rub&dest=-1257786&spp=30&nm=67858518"
     request_ulr: str = "https://card.wb.ru/cards/v2/detail"
     params = {
         "appType": 1,
@@ -76,17 +63,38 @@ async def get_product_response(session: ClientSession, article: int) -> str:
     }
 
     async with session.get(url=request_ulr, params=params) as response:
-        return await response.text()
+        return await response.text(encoding='utf-8')
 
 
-async def pars_product(response: dict) -> Product:
-    product = Product(
-        name = response[""],
-        price = response[""],
-        count = response[""],
-        review_rating = response[""],
-        feedbacks = response[""]
-        # supplier_rating = response[""]
+def wb_pars_product(product: dict) -> Product:
+    return Product(
+        article=product.get("id", 0),
+        name=product.get("name", ""),
+        brand=product.get("brand", ""),
+        colors=', '.join(color["name"] for color in product.get("colors", [])),
+        total_price=get_total_price(sizes=product["sizes"][0]),
+        wallet_price=get_wallet_price(sizes=product["sizes"][0]),
+        count=get_count(sizes=product["sizes"][0].get("stocks", [])),
+        review_rating=product.get("reviewRating", 0),
+        feedbacks=product.get("feedbacks", 0),
+        # supplier_rating=product.get("supplierRating", 0)
     )
-    return product
 
+
+def get_total_price(sizes: dict) -> int:
+    if sizes.get("price", None):
+        return int(sizes["price"]["total"]/100)
+    else:
+        return 0
+
+
+def get_wallet_price(sizes: dict) -> int:
+    if sizes.get("price", None):
+        total_price = sizes["price"]["total"]/100
+        return int(total_price - (total_price * 0.04))
+    else:
+        return 0
+
+
+def get_count(sizes: list) -> int:
+    return sum(int(i["qty"]) for i in sizes)

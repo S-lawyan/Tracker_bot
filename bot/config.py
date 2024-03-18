@@ -24,7 +24,7 @@ def load_config(config_path: str) -> Settings:
     bot_configs: BotConfig = BotConfig(
         bot_token=SecretStr(os.getenv("BOT_TOKEN", None)),
         per_page=os.getenv("PER_PAGE", None),
-        admins=os.getenv("ADMINS", []).split(",")
+        admins=[int(admin) for admin in os.getenv("ADMINS", []).split(",")]
     )
     db_configs: SQLiteConfig = SQLiteConfig(
         db_filename=os.getenv("DB_FILENAME", None)
