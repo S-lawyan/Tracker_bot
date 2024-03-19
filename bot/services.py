@@ -9,7 +9,7 @@ from api.http_session import HttpSessionMaker
 
 
 storage: SQLiteBase = SQLiteBase(config)
-wb: WildberriesAPI = WildberriesAPI(http_session_maker=HttpSessionMaker())
-# ozon: OzonAPI = OzonAPI(config)
+wb_api: WildberriesAPI = WildberriesAPI(http_session_maker=HttpSessionMaker())
+# ozon_api: OzonAPI = OzonAPI(http_session_maker=HttpSessionMaker())
 bot: Bot = Bot(token=config.bot.bot_token.get_secret_value(), parse_mode=types.ParseMode.HTML)
 dp: Dispatcher = Dispatcher(bot, storage=MemoryStorage())

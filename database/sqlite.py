@@ -80,3 +80,56 @@ class SQLiteBase:
         params = (user_id, product.article, json.dumps(product.__dict__, ensure_ascii=False))
         await self._execute_query(query=query, params=params)
 
+    async def get_all_products(self) -> dict:
+        query = f"""
+            SELECT * FROM products
+        """
+        params = ()
+        response = await self._execute_query(query=query, params=params)
+        rows: list = response.fetchall()
+        return pars_response(rows)
+
+
+def pars_response(rows: list[tuple]) -> dict:
+    """
+    Группировка либо по товарам
+    :param rows: list[tuple]
+    :return: rows_group_by_products {
+            "product_id": {
+                "users": [12345678, 87654321], # список пользователей, отслеживающих этот товар
+                "data": {...} # метаданные товара
+            }
+        }
+    """
+    rows_group_by_products: dict = {}
+    for row in rows:
+        article: int = row[1]
+        user_id: int = row[2]
+        product_data: str = row[3]
+        if article not in rows_group_by_products.keys():
+            # Если товара еще нет в сгруппированном списке
+            rows_group_by_products[article] = {
+                "users": [user_id],
+                "data": pars_product_from_json(json.loads(product_data))
+            }
+        else:
+            # Если товар уже есть в сгруппированном списке -
+            # дополняем список отслеживающих пользователей
+            rows_group_by_products[article]["users"].appand(user_id)
+    return rows_group_by_products
+
+
+def pars_product_from_json(product: dict) -> Product:
+    return Product(
+        article=product.get("id", 0),
+        name=product.get("name", ""),
+        brand=product.get("brand", ""),
+        colors=product.get("colors", ""),
+        total_price=product.get("total_price", 0),
+        wallet_price=product.get("wallet_price", 0),
+        count=product.get("count", 0),
+        review_rating=product.get("review_rating", 0),
+        feedbacks=product.get("feedbacks", 0),
+        # supplier_rating=product.get("supplierRating", 0)
+    )
+

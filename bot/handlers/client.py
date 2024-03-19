@@ -3,7 +3,7 @@ from aiogram import types
 from aiogram.dispatcher.filters import Text
 from bot.keyboards.client_kb import *
 from bot.services import dp
-from bot.services import wb
+from bot.services import wb_api
 from bot.services import storage
 from bot.filters.is_admin import IsAdmin
 from bot.utils.models import Product
@@ -46,7 +46,7 @@ async def command_help_message(message: types.Message) -> None:
 async def get_query(message: types.Message):
     query: str = message.text
     try:
-        product: Product = await wb.get_product(query=query)
+        product: Product = await wb_api.get_product(query=query)
         await storage.insert_product(product=product, user_id=int(message.from_user.id))
         await message.answer(text=utl.wb_create_product_message(product=product), reply_markup=None)
     except (

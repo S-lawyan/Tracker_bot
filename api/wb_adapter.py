@@ -18,7 +18,7 @@ class WildberriesAPI:
     def __init__(self, http_session_maker):
         self.session: ClientSession = http_session_maker()
 
-    async def get_product(self, query: str):
+    async def get_product(self, query: str) -> Product:
         # Выделение артикула
         article: int = await preprocess_query(query=query)
         # Выполнения запроса, получение товара
