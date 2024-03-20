@@ -1,7 +1,9 @@
 from api.http_session import HttpSessionMaker
 from bot.services import storage
+from bot.services import bot
 from api.wb_adapter import WildberriesAPI
 from loguru import logger
+from bot.utils import utilities as utl
 import json
 from bot.utils.models import Product
 from bot.utils.exceptions import (
@@ -35,6 +37,7 @@ class WildberriesTracker:
                 tracking_users: list = products_poll[article]["users"]
                 await update_product(api=api, old_product=product_data, tracking_users=tracking_users)
             logger.info(f"Проверка товаров завершена.")
+
 
 async def update_product(
         api: WildberriesAPI,
@@ -73,9 +76,18 @@ async def search_changes(
     # TODO сюда передавать процент из сеттинга
     # if (new_price <= old_price * 0.9) and (new_count != old_count)
     if new_price <= old_price * 0.9:
-        # Изменилась только цена
-        pass
+        logger.info(
+            f"Для продукта {old_product.article} изменилась цена с {old_product.total_price} на {new_product.total_price}"
+        )
+        for user in tracking_users:
+            await bot.send_message(
+                chat_id=user,
+                text=utl.wb_alert_user(
+                    new_product=new_product,
+                    old_product=old_product
+                )
+            )
+
     else:
-        logger.info(f"Для продукта {old_product.article} изменилась цена с {old_product.total_price} на {new_product.total_price}")
         return
 

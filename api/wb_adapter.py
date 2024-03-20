@@ -75,8 +75,10 @@ def wb_pars_product(product: dict) -> Product:
         total_price=get_total_price(sizes=product["sizes"][0]),
         wallet_price=get_wallet_price(sizes=product["sizes"][0]),
         count=get_count(sizes=product["sizes"][0].get("stocks", [])),
-        review_rating=product.get("reviewRating", 0),
-        feedbacks=product.get("feedbacks", 0),
+        supplier=product.get("supplier", ""),
+        supplier_id=product.get("supplierId", 0)
+        # review_rating=product.get("reviewRating", 0),
+        # feedbacks=product.get("feedbacks", 0),
         # supplier_rating=product.get("supplierRating", 0)
     )
 

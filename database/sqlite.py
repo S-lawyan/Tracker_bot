@@ -103,8 +103,8 @@ def pars_response(rows: list[tuple]) -> dict:
     """
     rows_group_by_products: dict = {}
     for row in rows:
-        article: int = row[1]
-        user_id: int = row[2]
+        user_id: int = row[1]
+        article: int = row[2]
         product_data: str = row[3]
         if article not in rows_group_by_products.keys():
             # Если товара еще нет в сгруппированном списке
@@ -115,21 +115,26 @@ def pars_response(rows: list[tuple]) -> dict:
         else:
             # Если товар уже есть в сгруппированном списке -
             # дополняем список отслеживающих пользователей
-            rows_group_by_products[article]["users"].appand(user_id)
+            if user_id not in rows_group_by_products[article]["users"]:
+                rows_group_by_products[article]["users"].appand(user_id)
+            else:
+                continue
     return rows_group_by_products
 
 
 def pars_product_from_json(product: dict) -> Product:
     return Product(
-        article=product.get("id", 0),
+        article=product.get("article", 0),
         name=product.get("name", ""),
         brand=product.get("brand", ""),
         colors=product.get("colors", ""),
         total_price=product.get("total_price", 0),
         wallet_price=product.get("wallet_price", 0),
         count=product.get("count", 0),
-        review_rating=product.get("review_rating", 0),
-        feedbacks=product.get("feedbacks", 0),
+        supplier=product.get("supplier", ""),
+        supplier_id=product.get("supplier_id", 0)
+        # review_rating=product.get("review_rating", 0),
+        # feedbacks=product.get("feedbacks", 0),
         # supplier_rating=product.get("supplierRating", 0)
     )
 

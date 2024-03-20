@@ -36,7 +36,8 @@ class SchedulerService:
 
     async def _wb_tracking_scheduler(self,):
         while True:
-            logger.info("Старт проверки цен")
+            logger.info("Старт проверки цен через 5 секунд")
+            await asyncio.sleep(5)
             await self.wb_tracker.tracking()
             await asyncio.sleep(5)
 
