@@ -32,7 +32,7 @@ class WildberriesAPI:
             logger.error(f"Ошибка подключение HTTP-сессии:\n{exc}")
             raise WildberriesAPIClientConnectionError()
         json_response = json.loads(response)
-        if not json_response["data"]["products"]:  # json_response["data"]["products"] == []
+        if not json_response["data"]["products"]:
             logger.error(f"Товар не найден:\n{query}")
             raise WildberriesAPIProductNotFound()
         return wb_pars_product(product=json_response["data"]["products"][0])

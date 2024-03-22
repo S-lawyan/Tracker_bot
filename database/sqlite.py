@@ -68,6 +68,14 @@ class SQLiteBase:
                 ).fetchone()[0]
             )
 
+    async def check_product(self, user_id: int, article: int) -> bool:
+        with self.connect as connect:
+            return bool(
+                connect.execute(
+                    "SELECT EXISTS(SELECT 1 FROM products WHERE user_id = ? AND article = ?)", (user_id, article)
+                ).fetchone()[0]
+            )
+
     async def insert_product(self, product: Product, user_id: int) -> None:
         query = f"""
             INSERT INTO products (
@@ -80,6 +88,16 @@ class SQLiteBase:
         params = (user_id, product.article, json.dumps(product.__dict__, ensure_ascii=False))
         await self._execute_query(query=query, params=params)
 
+    async def delete_one_product(self, user_id: int, article: int):
+        query = """ DELETE FROM products WHERE user_id = ? AND article = ? """
+        params = (user_id, article)
+        await self._execute_query(query=query, params=params)
+
+    async def drop_all_products(self, user_id: int) -> None:
+        query = """ DELETE FROM products WHERE user_id = ? """
+        params = (user_id,)
+        await self._execute_query(query=query, params=params)
+
     async def get_all_products(self) -> dict:
         query = f"""
             SELECT * FROM products
@@ -88,6 +106,15 @@ class SQLiteBase:
         response = await self._execute_query(query=query, params=params)
         rows: list = response.fetchall()
         return pars_response(rows)
+
+    async def get_products_by_user(self, user_id: int) -> list[Product]:
+        query = f"""
+            SELECT data FROM products WHERE user_id = ?
+        """
+        params = (user_id,)
+        response = await self._execute_query(query=query, params=params)
+        response = response.fetchall()
+        return [pars_product_from_json(json.loads(product[0])) for product in response]
 
 
 def pars_response(rows: list[tuple]) -> dict:
@@ -137,4 +164,3 @@ def pars_product_from_json(product: dict) -> Product:
         # feedbacks=product.get("feedbacks", 0),
         # supplier_rating=product.get("supplierRating", 0)
     )
-

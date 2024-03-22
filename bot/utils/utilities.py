@@ -2,6 +2,27 @@ from bot.utils.models import Product
 from loguru import logger
 
 
+async def generate_page_product(products: list[Product]) -> str:
+    message: str = "<u>📋 Список товаров</u>:\n\n"
+    for product in products:
+        if product.count != 0:
+            line = (
+                f"▫️ <b>{product.brand} {product.name} {product.colors}</b>\n"
+                f"<b>Цена:</b> {product.total_price} (~{product.wallet_price}) руб.\n"
+                f"<b>Количество:</b> {product.count} шт.\n"
+                f"<b>Артикул:</b> <code>{product.article}</code>\n\n"
+            )
+            message += line
+        else:
+            line = (
+                f"▫️ <b>{product.brand} {product.name} {product.colors}</b>\n"
+                f"<b>Артикул:</b> <code>{product.article}</code>\n"
+                f"<b>Нет в наличии</b>"
+            )
+            message += line
+    return message
+
+
 def wb_create_product_message(product: Product) -> str:
     # TODO сделать обработку списка list[Product]
     if product.count == 0:
@@ -18,12 +39,13 @@ def wb_create_product_message(product: Product) -> str:
     else:
         # Товар в наличии на сайте
         return (
-            f"✅ Позиция добавлена:\n"
+            f"✅  Позиция добавлена:\n"
             f"Wildberries 🟣\n\n"
             f"<b>{product.brand} {product.name} {product.colors}</b>\n"
             f"<b>Цена:</b> {product.total_price} руб. (~{product.wallet_price})\n"
             f"<b>В наличии:</b> {product.count} шт.\n"
-            f"<b>Продавец</b> <a href='https://www.wildberries.ru/seller/{product.supplier_id}'>{product.supplier}</a>\n"
+            f"<b>Продавец</b> "
+            f"<a href='https://www.wildberries.ru/seller/{product.supplier_id}'>{product.supplier}</a>\n"
             f"<b>Артикул:</b> <code>{product.article}</code>\n\n"
         )
 

@@ -6,10 +6,8 @@ from bot.services import bot
 from api.wb_adapter import WildberriesAPI
 from loguru import logger
 from bot.utils import utilities as utl
-import json
 from bot.utils.models import Product
 from bot.utils.exceptions import (
-    DatabaseExecuteQueryError,
     WildberriesAPIProductNotFound,
     WildberriesAPIGetProductTimeout,
     WildberriesAPIClientConnectionError,
@@ -34,7 +32,7 @@ class WildberriesTracker:
             return
         else:
             for article in products_poll:
-                await asyncio.cleep(1)
+                await asyncio.sleep(0.25)
                 # TODO Сюда передавать сеттинги пользователя
                 product_data: Product = products_poll[article]["data"]
                 tracking_users: list = products_poll[article]["users"]
