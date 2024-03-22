@@ -39,7 +39,7 @@ class SchedulerService:
             logger.info("Старт проверки цен через 5 секунд")
             await asyncio.sleep(5)
             await self.wb_tracker.tracking()
-            await asyncio.sleep(5)
+            await asyncio.sleep(30)
 
 
 async def _ozon_tracking_scheduler():

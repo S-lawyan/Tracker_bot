@@ -57,6 +57,6 @@ async def get_query(message: types.Message):
     except WildberriesAPIProductNotFound:
         await message.answer(text="❌ Товар не найден, попробуйте отправить ссылку вместо артикула или наоборот")
     except WildberriesAPIUncorrectedQuery:
-        await message.answer(text="❌ Это не похоже на артикул или ссылку")
+        await message.answer(text="❌ Это не похоже на артикул или ссылку на товар Wildberries")
     except DatabaseExecuteQueryError:
         await message.answer(text="⚠️ Ошибка с базой данных, повторите попытку или обратитесь к разработчику")

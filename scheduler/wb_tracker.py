@@ -1,3 +1,5 @@
+import asyncio
+
 from api.http_session import HttpSessionMaker
 from bot.services import storage
 from bot.services import bot
@@ -32,6 +34,7 @@ class WildberriesTracker:
             return
         else:
             for article in products_poll:
+                await asyncio.cleep(1)
                 # TODO Сюда передавать сеттинги пользователя
                 product_data: Product = products_poll[article]["data"]
                 tracking_users: list = products_poll[article]["users"]
@@ -53,8 +56,14 @@ async def update_product(
         logger.info(f"Ошибка WildberriesAPI при получении старого билета во время проверки цен\n{exc}")
         return
     except WildberriesAPIProductNotFound:
-        logger.info(f"Товар пропал с сайта или его артикул изменился. Оповещение пользователю.")
-        # TODO в идеале сюда передать экземпляр класса бота чтобы отправить алерт
+        logger.info(f"Артикул товара больше не действителен. Оповещение пользователя об этом.")
+        for user in tracking_users:
+            await bot.send_message(
+                chat_id=user,
+                text=utl.wb_alert_user_about_not_found(
+                    old_product=old_product
+                )
+            )
         return
     await search_changes(
         old_product=old_product,
@@ -64,9 +73,9 @@ async def update_product(
 
 
 async def search_changes(
-    old_product: Product,
-    new_product: Product,
-    tracking_users: list
+        old_product: Product,
+        new_product: Product,
+        tracking_users: list
 ) -> None:
     old_price: int = old_product.total_price
     # new_price: int = new_product.total_price
@@ -74,20 +83,43 @@ async def search_changes(
     old_count: int = old_product.count
     new_count: int = new_product.count
     # TODO сюда передавать процент из сеттинга
-    # if (new_price <= old_price * 0.9) and (new_count != old_count)
-    if new_price <= old_price * 0.9:
-        logger.info(
-            f"Для продукта {old_product.article} изменилась цена с {old_product.total_price} на {new_product.total_price}"
-        )
-        for user in tracking_users:
-            await bot.send_message(
-                chat_id=user,
-                text=utl.wb_alert_user(
-                    new_product=new_product,
-                    old_product=old_product
+
+    # Проверка наличия товара
+    if new_count != 0:
+        # Товар в наличии
+        if old_count == 0:
+            # Если его до этого не было
+            for user in tracking_users:
+                await bot.send_message(
+                    chat_id=user,
+                    text=utl.wb_alert_user_about_in_stock(
+                        product=new_product
+                    )
                 )
-            )
-
+        else:
+            # Если до этого был
+            if new_price <= old_price * 0.9:
+                # Если цена изменилась достаточно
+                for user in tracking_users:
+                    await bot.send_message(
+                        chat_id=user,
+                        text=utl.wb_alert_user_about_lowed_price(
+                            new_product=new_product,
+                            old_product=old_product
+                        )
+                    )
+            else:
+                # Если цена не изменилась, возросла или уменьшилась недостаточно
+                return
     else:
-        return
-
+        if new_count == 0 and old_count != 0:
+            # Товар был до этого, но сейчас пропал из наличия
+            for user in tracking_users:
+                await bot.send_message(
+                    chat_id=user,
+                    text=utl.wb_alert_user_about_out_stock(
+                        product=new_product
+                    )
+                )
+        else:
+            logger.info("Событие требующее внмания")
