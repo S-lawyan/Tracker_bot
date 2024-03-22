@@ -76,8 +76,8 @@ async def search_changes(
         tracking_users: list
 ) -> None:
     old_price: int = old_product.total_price
-    # new_price: int = new_product.total_price
-    new_price: float = old_product.total_price * 0.9
+    new_price: int = new_product.total_price
+    # new_price: float = old_product.total_price * 0.9
     old_count: int = old_product.count
     new_count: int = new_product.count
     # TODO сюда передавать процент из сеттинга

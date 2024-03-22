@@ -54,7 +54,7 @@ def main():
     loop = asyncio.get_event_loop()
     WB: WildberriesTracker = WildberriesTracker(http_session_maker=HttpSessionMaker())
     # OZON: OzonTracker = OzonTracker(http_session_maker=HttpSessionMaker())
-    # loop.create_task(start_schedulers(WB))
+    loop.create_task(start_schedulers(WB))
     filters.setup(dp=dp)
     executor.start_polling(dp, loop=loop, on_startup=on_startup, on_shutdown=on_shutdown, skip_updates=True)
 
