@@ -3,7 +3,6 @@ from apscheduler.triggers.interval import IntervalTrigger
 
 from scheduler.wb_tracker import WildberriesTracker
 # from scheduler.ozon_tracker import OzonTracker
-import asyncio
 from loguru import logger
 
 
@@ -35,7 +34,6 @@ class SchedulerService:
             start_delay=10,
             misfire_grace_time=30,
             trigger=IntervalTrigger(
-                # seconds=10,
                 minutes=30,
             )
         )

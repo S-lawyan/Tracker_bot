@@ -34,8 +34,7 @@ class WildberriesTracker:
         else:
             for article in products_poll:
                 logger.info(f"Проверяется: {article}")
-                # await asyncio.sleep(0.25)
-                await asyncio.sleep(5)
+                await asyncio.sleep(0.25)
                 # TODO Сюда передавать сеттинги пользователя
                 product_data: Product = products_poll[article]["data"]
                 tracking_users: list = products_poll[article]["users"]

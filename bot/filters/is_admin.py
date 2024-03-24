@@ -2,7 +2,6 @@ from typing import Union
 
 from aiogram.dispatcher.filters import BoundFilter
 from bot.config import config
-from loguru import logger
 from aiogram.types import (
     Message,
     CallbackQuery,

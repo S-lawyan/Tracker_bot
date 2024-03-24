@@ -4,7 +4,6 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from bot.config import config
 from database.sqlite import SQLiteBase
 from api.wb_adapter import WildberriesAPI
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from api.http_session import HttpSessionMaker
 # from api.ozon_adapter import OzonAPI
 
