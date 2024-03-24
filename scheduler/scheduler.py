@@ -1,8 +1,8 @@
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.interval import IntervalTrigger
 
 from scheduler.wb_tracker import WildberriesTracker
 # from scheduler.ozon_tracker import OzonTracker
+from datetime import datetime, timedelta
 from loguru import logger
 
 
@@ -31,11 +31,10 @@ class SchedulerService:
             self.wb_tracker.tracking,
             max_instances=5,
             coalesce=False,
-            start_delay=10,
+            start_date=datetime.now()+timedelta(seconds=10),
             misfire_grace_time=30,
-            trigger=IntervalTrigger(
-                minutes=30,
-            )
+            trigger='interval',
+            minutes=30
         )
 
 

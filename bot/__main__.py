@@ -5,7 +5,7 @@ from scheduler.wb_tracker import WildberriesTracker
 # from bot.services import OZON_track
 from loguru import logger
 from aiogram import executor
-import handlers
+from bot import handlers
 from aiogram import types
 from bot import filters
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -35,7 +35,7 @@ async def start_schedulers(WB):
 
 async def on_startup(dp):
     logger.add(
-        "logs/avia_bot_{time:YYYY-MM-DD}.log",
+        "logs/wb_bot_{time:YYYY-MM-DD}.log",
         rotation="1 day",
         retention="7 days",
         compression="zip",

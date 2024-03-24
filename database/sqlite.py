@@ -14,7 +14,7 @@ from bot.utils.exceptions import (
 class SQLiteBase:
     def __init__(self, config: Settings):
         self.connect = sq.connect(
-            database="../database/" + config.db.db_filename
+            database="database/storage/" + config.db.db_filename
         )
         if self.connect:
             logger.warning("The connection to the database has been completed successfully!")

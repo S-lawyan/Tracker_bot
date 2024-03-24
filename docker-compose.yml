@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  wb_bot:
+    image: wb_bot:latest
+    container_name: wb_bot
+    volumes:
+      - .env:/app/.env
+      - ./logs:/app/logs
+      - ./storage/:/app/database/storage/
+    command: python -m bot
+    restart: always
+
