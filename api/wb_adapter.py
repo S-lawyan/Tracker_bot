@@ -72,8 +72,7 @@ def wb_pars_product(product: dict) -> Product:
         name=product.get("name", ""),
         brand=product.get("brand", ""),
         colors=', '.join(color["name"] for color in product.get("colors", [])),
-        total_price=get_total_price(sizes=product["sizes"][0]),
-        wallet_price=get_wallet_price(sizes=product["sizes"][0]),
+        price=get_price(sizes=product["sizes"][0]),
         count=get_count(sizes=product["sizes"][0].get("stocks", 0)),
         supplier=product.get("supplier", ""),
         supplier_id=product.get("supplierId", 0)
@@ -83,17 +82,9 @@ def wb_pars_product(product: dict) -> Product:
     )
 
 
-def get_total_price(sizes: dict) -> int:
+def get_price(sizes: dict) -> int:
     if sizes.get("price", None):
         return int(sizes["price"]["total"]/100)
-    else:
-        return 0
-
-
-def get_wallet_price(sizes: dict) -> int:
-    if sizes.get("price", None):
-        total_price = sizes["price"]["total"]/100
-        return int(total_price - (total_price * 0.04))
     else:
         return 0
 

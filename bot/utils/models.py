@@ -7,8 +7,7 @@ class Product:
     name: str  # Наименование товара
     brand: str
     colors: str
-    total_price: int  # Цена товара
-    wallet_price: int  # Цена товара со скидкой по вб-кошельку
+    price: int  # Цена товара
     count: int  # Количество товара
     supplier: str  # Название продавца
     supplier_id: int  # Идентификатор продавца

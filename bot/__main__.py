@@ -17,6 +17,7 @@ async def set_default_settings_bot(dp):
     await dp.bot.set_my_commands(
         [
             types.BotCommand("start", "Главное меню"),
+            types.BotCommand("list", "Список позиций"),
             types.BotCommand("help", "Помощь"),
             types.BotCommand("truncate", "Очистить позиции"),
         ]

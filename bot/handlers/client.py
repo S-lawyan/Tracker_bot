@@ -20,6 +20,7 @@ from bot.utils.exceptions import (
 from aiogram.dispatcher.filters.state import State
 from aiogram.dispatcher.filters.state import StatesGroup
 from aiogram.dispatcher import FSMContext
+from aiogram.utils.exceptions import MessageNotModified
 
 
 class UserState(StatesGroup):
@@ -52,7 +53,7 @@ async def command_help_message(message: types.Message) -> None:
     await message.answer(text="help")
 
 
-@dp.message_handler(IsAdmin(), commands=["show_products_list"], state=None)
+@dp.message_handler(IsAdmin(), commands=["list"], state=None)
 @dp.message_handler(IsAdmin(), Text(startswith="список", ignore_case=True), state=None)
 @dp.message_handler(IsAdmin(), Text(startswith="список позиций", ignore_case=True), state=None)
 async def get_product_list(message: types.Message):
@@ -90,7 +91,7 @@ async def delete_one_product(message: types.Message, state: FSMContext):
     await sent_message.edit_reply_markup(reply_markup=None)
     try:
         article: int = int(message.text)
-        if not await storage.check_product(user_id=int(message.from_user.id), article=article):
+        if await storage.check_product(user_id=int(message.from_user.id), article=article):
             await storage.delete_one_product(user_id=int(message.from_user.id), article=article)
             await message.answer(f"✅ Товар <code>{article}</code> успешно удален")
         else:
@@ -196,3 +197,9 @@ async def next_page(call: types.CallbackQuery):
         )
     except (IndexError, KeyError):
         pass
+
+
+@dp.errors_handler(exception=MessageNotModified)
+async def message_not_modified_handler(update: types.Update, error):
+    await update.callback_query.answer()
+    return True

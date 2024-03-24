@@ -11,17 +11,13 @@ kb_confirm_deletion.add(btn_confirm, btn_cancel)
 kb_cancel = InlineKeyboardMarkup()
 kb_cancel.add(btn_cancel)
 
-btn_product_list = KeyboardButton(text="Список позиций 📋", command='show_products_list')
+btn_product_list = KeyboardButton(text="Список позиций 📋", command='list')
 btn_help = KeyboardButton(text="Помощь 🆘", command='help')
 btn_delete_one_product = KeyboardButton(text="Удалить 1 позицию", command="drop_one")
 btn_drop_all_products = KeyboardButton(text="Удалить все 🗑", command="drop_all")
 admin_panel_main = ReplyKeyboardMarkup(
     resize_keyboard=True
 ).add(btn_product_list, btn_help).add(btn_delete_one_product, btn_drop_all_products)
-
-
-# btn_cancel = KeyboardButton(text="Отмена", command='cancel')
-# kb_cancel = ReplyKeyboardMarkup(resize_keyboard=True).add(btn_cancel)
 
 
 async def pagination(total_pages: int, page: int = 0):

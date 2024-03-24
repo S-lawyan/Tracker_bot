@@ -25,11 +25,10 @@ class SQLiteBase:
         with self.connect as connect:
             connect.execute("""
                 CREATE TABLE IF NOT EXISTS "products" (
-                    "id"	INTEGER,
+                    "date_insert" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     "user_id"	INTEGER,
                     "article"	INTEGER,
-                    "data"	TEXT,
-                    PRIMARY KEY("id" AUTOINCREMENT)
+                    "data"	TEXT
                 )
             """)
             connect.execute("""
@@ -58,6 +57,12 @@ class SQLiteBase:
             VALUES (?)
         """
         params = (user_id,)
+        await self._execute_query(query=query, params=params)
+
+    async def update_product(self, product: Product, user_id: int):
+        query = """ UPDATE products SET data = ? WHERE user_id = ? AND article = ? """
+        data: str = json.dumps(product.__dict__, ensure_ascii=False)
+        params = (data, user_id, product.article)
         await self._execute_query(query=query, params=params)
 
     async def check_user(self, user_id: int) -> bool:
@@ -100,7 +105,7 @@ class SQLiteBase:
 
     async def get_all_products(self) -> dict:
         query = f"""
-            SELECT * FROM products
+            SELECT * FROM products ORDER BY date_insert
         """
         params = ()
         response = await self._execute_query(query=query, params=params)
@@ -155,8 +160,7 @@ def pars_product_from_json(product: dict) -> Product:
         name=product.get("name", ""),
         brand=product.get("brand", ""),
         colors=product.get("colors", ""),
-        total_price=product.get("total_price", 0),
-        wallet_price=product.get("wallet_price", 0),
+        price=product.get("price", 0),
         count=product.get("count", 0),
         supplier=product.get("supplier", ""),
         supplier_id=product.get("supplier_id", 0)

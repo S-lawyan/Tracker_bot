@@ -75,9 +75,8 @@ async def search_changes(
         new_product: Product,
         tracking_users: list
 ) -> None:
-    old_price: int = old_product.total_price
-    new_price: int = new_product.total_price
-    # new_price: float = old_product.total_price * 0.9
+    old_price: int = old_product.price
+    new_price: int = new_product.price
     old_count: int = old_product.count
     new_count: int = new_product.count
     # TODO сюда передавать процент из сеттинга
@@ -88,6 +87,7 @@ async def search_changes(
         if old_count == 0:
             # Если его до этого не было
             for user in tracking_users:
+                await storage.update_product(product=new_product, user_id=user)
                 await bot.send_message(
                     chat_id=user,
                     text=utl.wb_alert_user_about_in_stock(
@@ -96,9 +96,10 @@ async def search_changes(
                 )
         else:
             # Если до этого был
-            if new_price <= old_price * 0.9:
-                # Если цена изменилась достаточно
+            if new_price < old_price:
+                # Если цена уменьшилась
                 for user in tracking_users:
+                    await storage.update_product(product=new_product, user_id=user)
                     await bot.send_message(
                         chat_id=user,
                         text=utl.wb_alert_user_about_lowed_price(
@@ -107,17 +108,20 @@ async def search_changes(
                         )
                     )
             else:
-                # Если цена не изменилась, возросла или уменьшилась недостаточно
+                # Если цена не изменилась или возросла
                 return
     else:
         if new_count == 0 and old_count != 0:
             # Товар был до этого, но сейчас пропал из наличия
             for user in tracking_users:
+                await storage.update_product(product=new_product, user_id=user)
                 await bot.send_message(
                     chat_id=user,
                     text=utl.wb_alert_user_about_out_stock(
                         product=new_product
                     )
                 )
+        elif new_count == 0 and old_count == 0:
+            return
         else:
-            logger.info("Событие требующее внмания")
+            logger.info("Событие требующее внимания")
