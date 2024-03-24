@@ -8,7 +8,7 @@ from aiogram import executor
 import handlers
 from aiogram import types
 from bot import filters
-from apscheduler.schedulers.async_ import AsyncScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from scheduler.scheduler import SchedulerService
 from bot.services import HttpSessionMaker
 
@@ -25,14 +25,12 @@ async def set_default_settings_bot(dp):
 
 
 async def start_schedulers(WB):
-    async with AsyncScheduler() as scheduler:
-        service_scheduler = SchedulerService(
-            scheduler=scheduler,
-            wb_tracker=WB
-        )
-        await service_scheduler.start()
-        # while True:
-        #     await asyncio.sleep(1)
+    scheduler: AsyncIOScheduler = AsyncIOScheduler()
+    service_scheduler = SchedulerService(
+        scheduler=scheduler,
+        wb_tracker=WB
+    )
+    await service_scheduler.start()
 
 
 async def on_startup(dp):

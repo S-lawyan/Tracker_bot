@@ -19,6 +19,7 @@ class WildberriesTracker:
         self.http_session_maker = http_session_maker
 
     async def tracking(self):
+        logger.info("Старт проверки товаров")
         api: WildberriesAPI = WildberriesAPI(self.http_session_maker)
         # TODO сделать проверку для каждого пользователя индивидуально...
         #  Как у нас в префекте когда асинхронно выполняется список.
@@ -32,12 +33,14 @@ class WildberriesTracker:
             return
         else:
             for article in products_poll:
-                await asyncio.sleep(0.25)
+                logger.info(f"Проверяется: {article}")
+                # await asyncio.sleep(0.25)
+                await asyncio.sleep(5)
                 # TODO Сюда передавать сеттинги пользователя
                 product_data: Product = products_poll[article]["data"]
                 tracking_users: list = products_poll[article]["users"]
                 await update_product(api=api, old_product=product_data, tracking_users=tracking_users)
-            logger.info(f"Проверка товаров завершена.")
+        logger.info(f"Проверка товаров завершена.")
 
 
 async def update_product(

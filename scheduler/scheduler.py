@@ -1,5 +1,4 @@
-from apscheduler.schedulers.async_ import AsyncScheduler
-from apscheduler.triggers.cron import CronTrigger
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
 from scheduler.wb_tracker import WildberriesTracker
@@ -11,7 +10,7 @@ from loguru import logger
 class SchedulerService:
     def __init__(
             self,
-            scheduler: AsyncScheduler,
+            scheduler: AsyncIOScheduler,
             wb_tracker: WildberriesTracker,
             # ozon_tracker: OzonTracker,
     ):
@@ -21,25 +20,25 @@ class SchedulerService:
 
     async def start(self):
         # Планирование тасков и запуск планировщика
-        # TODO попробовать переделать планировщик под релизную версию библиотеки
-        #  и проверить будет ли работать асинхронно, чтобы избавиться от костыля в _wb_tracking_scheduler
-        # await self.scheduler.add_schedule(
-        #     _wb_tracking_scheduler,
-        #     "interval",
-        #     seconds=5,
-        # )
-
-        # С костылем, но работает
         await self._wb_tracking_scheduler()
-        await self.scheduler.start_in_background()
+        self.scheduler.start()
         logger.warning("Планировщик запущен!")
 
+    async def stop(self):
+        await self.scheduler.shutdown()
+
     async def _wb_tracking_scheduler(self,):
-        while True:
-            logger.info("Старт проверки цен через 5 секунд")
-            await asyncio.sleep(5)
-            await self.wb_tracker.tracking()
-            await asyncio.sleep(1800)
+        self.scheduler.add_job(
+            self.wb_tracker.tracking,
+            max_instances=5,
+            coalesce=False,
+            start_delay=10,
+            misfire_grace_time=30,
+            trigger=IntervalTrigger(
+                # seconds=10,
+                minutes=30,
+            )
+        )
 
 
 async def _ozon_tracking_scheduler():
