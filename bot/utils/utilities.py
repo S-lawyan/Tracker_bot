@@ -33,7 +33,7 @@ def wb_create_product_message(product: Product) -> str:
             f"✅ Позиция добавлена:\n"
             f"Wildberries 🟣\n\n"
             f"<b>{product.brand} {product.name} {product.colors}</b>\n"
-            f"<b>Продавец</b> <a href='https://www.wildberries.ru/seller/{product.supplier_id}'>{product.supplier}</a>"
+            f"<b>Продавец</b> <a href='https://www.wildberries.ru/seller/{product.supplier_id}'>{product.supplier}</a>\n"
             f"<b>Артикул:</b> <code>{product.article}</code>\n\n"
             f"Сейчас товара нет в наличии.\n"
             f"Вам <b>придет уведомление</b>, когда он <b>появился на сайте</b>."
