@@ -148,7 +148,7 @@ def pars_response(rows: list[tuple]) -> dict:
             # Если товар уже есть в сгруппированном списке -
             # дополняем список отслеживающих пользователей
             if user_id not in rows_group_by_products[article]["users"]:
-                rows_group_by_products[article]["users"].appand(user_id)
+                rows_group_by_products[article]["users"].append(user_id)
             else:
                 continue
     return rows_group_by_products
