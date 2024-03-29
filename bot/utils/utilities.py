@@ -90,7 +90,7 @@ def wb_alert_user_about_upped_price(old_product: Product, new_product: Product) 
 
 def wb_alert_user_about_in_stock(product: Product) -> str:
     logger.info(
-        f"Продукт появился в наличии: {product.article} было {product.count} стало {product.count}")
+        f"Продукт появился в наличии: {product.article} в количестве {product.count} штуки")
     return (
         f"⚡⚡⚡ <b>Товар появился в наличии</b>\n"
         f"Wildberries 🟣\n\n"
@@ -105,7 +105,7 @@ def wb_alert_user_about_in_stock(product: Product) -> str:
 
 def wb_alert_user_about_out_stock(product: Product) -> str:
     logger.info(
-        f"Продукт закончился: {product.article} было {product.count} стало {product.count}")
+        f"Продукт закончился: {product.article}")
     return (
         f"⚡⚡ <b>Товар закончился</b>\n"
         f"Wildberries 🟣\n\n"
