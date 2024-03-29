@@ -109,8 +109,18 @@ async def search_changes(
                             old_product=old_product
                         )
                     )
+            elif new_price > old_price:
+                for user in tracking_users:
+                    await storage.update_product(product=new_product, user_id=user)
+                    await bot.send_message(
+                        chat_id=user,
+                        text=utl.wb_alert_user_about_upped_price(
+                            new_product=new_product,
+                            old_product=old_product
+                        )
+                    )
             else:
-                # Если цена не изменилась или возросла
+                # Цена не изменилась
                 return
     else:
         if new_count == 0 and old_count != 0:

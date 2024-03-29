@@ -45,7 +45,7 @@ def wb_create_product_message(product: Product) -> str:
             f"Wildberries 🟣\n\n"
             f"<b>{product.brand} {product.name} {product.colors}</b>\n"
             f"<b>Цена:</b> {product.price} руб.\n"
-            f"<b>В наличии:</b> {product.count} шт.\n"
+            f"<b>Количество:</b> {product.count} шт.\n"
             f"<b>Продавец</b> "
             f"<a href='https://www.wildberries.ru/seller/{product.supplier_id}'>{product.supplier}</a>\n"
             f"<b>Артикул:</b> <code>{product.article}</code>\n\n"
@@ -54,7 +54,7 @@ def wb_create_product_message(product: Product) -> str:
 
 def wb_alert_user_about_lowed_price(old_product: Product, new_product: Product) -> str:
     logger.info(
-        f"Изменение цены {new_product.article} с {old_product.price} на {new_product.price}"
+        f"Цена снизилась {new_product.article} с {old_product.price} на {new_product.price}"
     )
     return (
         f"⚡⚡⚡ <b>Цена снижена</b>\n"
@@ -64,7 +64,26 @@ def wb_alert_user_about_lowed_price(old_product: Product, new_product: Product) 
         f"<b>Продавец:</b> "
         f"<a href='https://www.wildberries.ru/seller/{new_product.supplier_id}'>{new_product.supplier}</a>\n\n"
         f"<b>Старая цена:</b> {old_product.price} руб.\n"
-        f"<b>Новая цена:</b> {new_product.price} руб.\n\n"
+        f"<b>Новая цена:</b> {new_product.price} руб.\n"
+        f"<b>Количество:</b> {new_product.count} шт.\n\n"
+        f"<a href='https://www.wildberries.ru/catalog/{new_product.article}/detail.aspx'>СТРАНИЦА ТОВАРА</a>"
+    )
+
+
+def wb_alert_user_about_upped_price(old_product: Product, new_product: Product) -> str:
+    logger.info(
+        f"Цена возросла {new_product.article} с {old_product.price} на {new_product.price}"
+    )
+    return (
+        f"⚡ <b>Цена возросла</b>\n"
+        f"Wildberries 🟣\n\n"
+        f"<b>{new_product.brand} {new_product.name} {new_product.colors}</b>\n"
+        f"<b>Артикул:</b> <code>{new_product.article}</code>\n"
+        f"<b>Продавец:</b> "
+        f"<a href='https://www.wildberries.ru/seller/{new_product.supplier_id}'>{new_product.supplier}</a>\n\n"
+        f"<b>Старая цена:</b> {old_product.price} руб.\n"
+        f"<b>Новая цена:</b> {new_product.price} руб.\n"
+        f"<b>Количество:</b> {new_product.count} шт.\n\n"
         f"<a href='https://www.wildberries.ru/catalog/{new_product.article}/detail.aspx'>СТРАНИЦА ТОВАРА</a>"
     )
 
@@ -77,8 +96,9 @@ def wb_alert_user_about_in_stock(product: Product) -> str:
         f"Wildberries 🟣\n\n"
         f"<b>{product.brand} {product.name} {product.colors}\n</b>"
         f"<b>Артикул:</b> <code>{product.article}</code>\n"
-        f"<b>Продавец:</b> <a href='https://www.wildberries.ru/seller/{product.supplier_id}'>{product.supplier}</a>\n\n"
+        f"<b>Продавец:</b> <a href='https://www.wildberries.ru/seller/{product.supplier_id}'>{product.supplier}</a>\n"
         f"<b>Цена:</b> {product.price} руб.\n"
+        f"<b>Количество:</b> {product.count} шт.\n\n"
         f"<a href='https://www.wildberries.ru/catalog/{product.article}/detail.aspx'>СТРАНИЦА ТОВАРА</a>"
     )
 
